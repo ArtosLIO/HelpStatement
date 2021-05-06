@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    <title>ERROR SUCCESS</title>
+{% endblock %}
+
+
+{% block content %}
+    <span><a href="{% url 'list' %}">List statement</a></span>
+    <br><hr><br>
+
+    <form method="post" action="{% url 'success_statement' statement.id %}">
+        {% csrf_token %}
+        <input type="hidden" value="confirmed" name="success">
+        <input type="submit" value="Подтвердить">
+    </form>
+    <form method="post" action="{% url 'success_statement' statement.id %}">
+        {% csrf_token %}
+        <input type="text" name="comment">
+        <input type="hidden" value="rejected" name="success">
+        <input type="submit" value="Отклонить">
+    </form>
+
+    <h3 style="color: red">Don't enter comment!</h3>
+{% endblock %}

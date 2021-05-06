@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    <title>Detail statement</title>
+{% endblock %}
+
+
+{% block content %}
+    <span><a href="{% url 'logout' %}">Logout</a></span><br>
+    <span><a href="{% url 'list' %}">List statement</a></span><br>
+    {% if request.user.is_staff %}
+        <span><a href="{% url 'list_returned' %}">List Returned</a></span><br>
+    {% endif %}
+    <br><hr><br>
+
+    <h3>{{ object.title }}</h3>
+    <p>{{ object.description }}</p>
+    <i><b>Impotant: {{ object.get_level_important_display }}</b></i>
+    <i>Status: {{ object.get_success_display }}</i><br>
+    <pre><i>{{ object.create_at|date:'Y/m/d - h:i:s' }}</i></pre>
+    <hr>
+    {% for comment in object.state_comment.all %}
+        <p>{{ comment.text }}</p>
+        <i>{{ comment.create_at }}</i>
+    {% endfor %}
+    <hr>
+    {% if object.success != 'R' and object.success != 'Returned' %}
+        <form method="post" action="{% url 'create_comment' statement.id %}">
+        <input type="text" name="text">
+        {% csrf_token %}
+        <input type="submit" value="Отправить">
+    </form>
+    {% endif %}
+    <hr>
+{% endblock %}

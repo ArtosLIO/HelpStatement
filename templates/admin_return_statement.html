@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load mytags %}
+
+
+{% block title %}
+    <title>Returned Statement</title>
+{% endblock %}
+
+
+{% block content %}
+    <span><a href="{% url 'logout' %}">Logout</a></span><br>
+    <span><a href="{% url 'list' %}">List</a></span><br>
+    <br><hr><br>
+
+    {% for statement in object_list %}
+        <h3>{{ statement.title }}</h3>
+        <p>{{ statement.description }}</p>
+        <i><b>Impotant: {{ statement.get_level_important_display }}</b></i>
+        <i>Status: {{ statement.get_success_display }}</i><br>
+        <pre><i>{{ statement.create_at|date:'Y/m/d - h:i:s' }}</i></pre>
+        <hr>
+        <p><i>Last comment: </i>{{ statement.state_comment|filter_first:statement.id }}</p>
+        <hr>
+        <form method="get" action="{% url 'detail' statement.id %}">
+            <input type="submit" value="Detail">
+        </form>
+        {% if request.user.is_staff %}
+            <form method="post" action="{% url 'success_statement' statement.id %}">
+                {% csrf_token %}
+                <input type="hidden" value="confirmed" name="success">
+                <input type="submit" value="Подтвердить">
+            </form>
+            <form method="post" action="{% url 'delete_statement' statement.id %}">
+                {% csrf_token %}
+                <input type="submit" value="Delete">
+            </form>
+        {% endif %}
+        <hr>
+    {% endfor %}
+{% endblock %}

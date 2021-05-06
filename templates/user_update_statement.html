@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    <title>Update Statement</title>
+{% endblock %}
+
+
+{% block content %}
+    <span><a href="{% url 'logout' %}">Logout</a></span><br>
+    <span><a href="{% url 'list' %}">List statement</a></span><br>
+    <br><hr><br>
+
+    <form method="post">
+        {{ form.as_ul }}
+        {% csrf_token %}
+        <input type="submit" value="Update">
+    </form>
+{% endblock %}
