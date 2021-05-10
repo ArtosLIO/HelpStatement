@@ -80,8 +80,11 @@ class ReturnedHelpStatement(LoginRequiredMixin, UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        self.object.success = 'R'
-        return self.form_valid(self.object)
+        if self.object.success == 'F':
+            self.object.success = 'R'
+            return self.form_valid(self.object)
+        else:
+            return self.form_invalid(self.object)
 
     def get_success_url(self):
         return self.success_url
@@ -107,47 +110,6 @@ class CreateComment(LoginRequiredMixin, CreateView):
         return super().get_success_url()
 
 # Superuser
-
-class ConfirmedHelpStatement(UserPassesTestMixin, UpdateView):
-    success_url = '/list/'
-    model = Statement
-    form_class = AdminUpdateHelpStatementForm
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.success = 'C'
-        return self.form_valid(self.object)
-
-    def get_success_url(self):
-        return self.success_url
-
-    def test_func(self):
-        return self.request.user.is_staff
-
-
-class RejectedHelpStatement(UserPassesTestMixin, UpdateView):
-    success_url = '/list/'
-    model = Statement
-    form_class = AdminUpdateHelpStatementForm
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if request.POST['comment'] not in ('', ' '):
-            self.object.success = 'F'
-            comment = Comment(text=request.POST['comment'])
-            comment.user = request.user
-            comment.statement = self.object
-            comment.save()
-            return self.form_valid(self.object)
-        else:
-            return self.form_invalid(self.object)
-
-    def get_success_url(self):
-        return self.success_url
-
-    def test_func(self):
-        return self.request.user.is_staff
-
 
 class UpdateSuccessHelpStatement(UserPassesTestMixin, UpdateView):
     success_url = '/list/'

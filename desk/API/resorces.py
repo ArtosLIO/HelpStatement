@@ -72,6 +72,19 @@ class ListDetailHelpStatement(ListModelMixin, RetrieveModelMixin, GenericViewSet
                 return queryset.all().exclude(success='R')
             return queryset.filter(user=self.request.user).exclude(success='R')
 
+    def filter_queryset(self, queryset):
+        level_important = self.request.stream.GET.get('level_important', False)
+        if level_important:
+            if level_important in ('low', 'L', 'Low'):
+                level_important = 'L'
+            elif level_important in ('medium', 'M', 'Medium'):
+                level_important = 'M'
+            elif level_important in ('high', 'H', 'High'):
+                level_important = 'H'
+            return queryset.filter(level_important=level_important)
+        else:
+            return queryset
+
 # User
 
 class CreateUpdateHelpStatement(CreateModelMixin, UpdateModelMixin, GenericViewSet, ViewSetMixin):

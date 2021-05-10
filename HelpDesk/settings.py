@@ -81,13 +81,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'helpdeskbd',
-        'USER': 'userhelpdesk',
+        'USER': 'helpdesk',
         'PASSWORD': '123qwe',
         'HOST': 'localhost',
         'PORT': '5432',
-        # 'TEST': {
-        #     'NAME': 'mytestbd',
-        # },
+        'TEST': {
+            'NAME': 'helpdesktestbd',
+        },
     }
 }
 
